@@ -2,15 +2,26 @@ const routes = require('express').Router();
 
 let projects = [];
 let cont = 0;
-function existsProject() {}
 
-function countRequests(req, res, next) {
+function existsProjectMiddleware(req, res, next) {
+  const { id } = req.params;
+
+  const index = projects.find(project => project.id === id);
+
+  if (!index) {
+    return res.status(400).send(`Project with ID ${id} not found`);
+  }
+
+  return next();
+}
+
+function countRequestsMiddleware(req, res, next) {
   cont++;
   console.log(`Já foram feitas ${cont} requisições para o servidor.`);
   return next();
 }
 
-routes.use(countRequests);
+routes.use(countRequestsMiddleware);
 
 routes.post('/projects', (req, res) => {
   const { id, title } = req.body;
@@ -26,7 +37,7 @@ routes.get('/projects', (req, res) => {
   return res.json(projects);
 });
 
-routes.put('/projects/:id', (req, res) => {
+routes.put('/projects/:id', existsProjectMiddleware, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
   projects.find(project => {
@@ -38,7 +49,7 @@ routes.put('/projects/:id', (req, res) => {
   return res.json(projects);
 });
 
-routes.delete('/projects/:id', (req, res) => {
+routes.delete('/projects/:id', existsProjectMiddleware, (req, res) => {
   const { id } = req.params;
 
   projects = projects.filter(project => project.id !== id);
@@ -46,7 +57,7 @@ routes.delete('/projects/:id', (req, res) => {
   return res.send();
 });
 
-routes.post('/projects/:id/tasks', (req, res) => {
+routes.post('/projects/:id/tasks', existsProjectMiddleware, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
   projects.find(project => {
