@@ -19,7 +19,7 @@ routes.get('/projects', (req, res) => {
 routes.put('/projects/:id', (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
-  projects.map(project => {
+  projects.find(project => {
     if (project.id === id) {
       project.title = title;
     }
@@ -34,6 +34,18 @@ routes.delete('/projects/:id', (req, res) => {
   projects = projects.filter(project => project.id !== id);
 
   return res.send();
+});
+
+routes.post('/projects/:id/tasks', (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+  projects.find(project => {
+    if (project.id === id) {
+      project.tasks.push(title);
+    }
+  });
+
+  return res.json(projects);
 });
 
 module.exports = routes;
