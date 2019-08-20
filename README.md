@@ -10,6 +10,6 @@ Aplicação utilizando Express para armazenamento de projetos e suas tarefas.
 
 - `PUT /projects/:id`
 
-- `DELETE /projects/:id`:
+- `DELETE /projects/:id`
 
 - `POST /projects/:id/tasks`
