@@ -1,6 +1,16 @@
 const routes = require('express').Router();
 
 let projects = [];
+let cont = 0;
+function existsProject() {}
+
+function countRequests(req, res, next) {
+  cont++;
+  console.log(`Já foram feitas ${cont} requisições para o servidor.`);
+  return next();
+}
+
+routes.use(countRequests);
 
 routes.post('/projects', (req, res) => {
   const { id, title } = req.body;
