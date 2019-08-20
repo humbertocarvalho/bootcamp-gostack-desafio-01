@@ -1,6 +1,6 @@
 const routes = require('express').Router();
 
-const projects = [];
+let projects = [];
 
 routes.post('/projects', (req, res) => {
   const { id, title } = req.body;
@@ -31,7 +31,7 @@ routes.put('/projects/:id', (req, res) => {
 routes.delete('/projects/:id', (req, res) => {
   const { id } = req.params;
 
-  projects.filter(project => project.id !== id);
+  projects = projects.filter(project => project.id !== id);
 
   return res.send();
 });
